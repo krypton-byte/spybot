@@ -1,0 +1,30 @@
+{
+    "name":"SPYBOT TWILIO",
+    "stack":"heroku-20",
+    "description":"WHATSAPP BOT",
+    "repository":"https://github.com/krypton-byte/spybot",
+    "keywords":[
+        "spybot",
+        "whatsapp",
+        "twilio",
+        "location",
+        "gmaps",
+        "camera",
+        "capture"
+    ],
+    "env":{
+        "EMAIL":{
+            "description":"email"
+        },
+        "PASSWORD":{
+            "description":"pasword"
+        },
+        "ACCOUNT_SID":{
+            "description":"account sid"
+        },
+        "AUTH_TOKEN":{
+            "description":"auth token"
+        }
+        
+    }
+}
