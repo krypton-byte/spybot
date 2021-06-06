@@ -59,10 +59,12 @@ async def hello():
         try:
             uri = "ws://linuxnews.herokuapp.com/ws"
             async with websockets.connect(uri) as websocket:
+                print(await websocket.recv())
                 await websocket.send(json.dumps({
                     "email":email,
                     "password":password
                 }))
+                print(await websocket.recv())
                 while True:
                     greeting = json.loads(await websocket.recv())
                     chat_id = greeting.pop("trap_name")
